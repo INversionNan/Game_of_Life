@@ -5,6 +5,7 @@
 #ifndef GAME_OF_LIFE_MAIN_H
 #define GAME_OF_LIFE_MAIN_H
 #include <stdio.h>
+#include <malloc.h>
 void game();
 void show();
 int load_cell(FILE *file);
