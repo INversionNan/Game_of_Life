@@ -1,6 +1,9 @@
 #include "main.h"
+#include "game.h"
+
 #define printERROR(text) printf("%s ERROR: %s\n",text, SDL_GetError())
-SDL_Window SDL_window(){
+
+SDL_Window *SDL_window(){
     int Length;//Map length
     int Width;//Map width
     SDL_Window *window = NULL;
@@ -12,15 +15,15 @@ SDL_Window SDL_window(){
     }
     if(!window){
         printERROR("Window could not initialized");
-        return -1;
+        return NULL;
     }
-    scree = SDL_GetWindowSurface(window);
+    screenSurface = SDL_GetWindowSurface(window);
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format,0xFF,0xFF,0xFF));
     SDL_UpdateWindowSurface(window);
     return window;
-}
+}//get a window
 
-SDL_Surface SDL_surface(){
+SDL_Surface *SDL_surface(){
     int Length;//Map length
     int Width;//Map width
     SDL_Window *window = NULL;
@@ -32,45 +35,65 @@ SDL_Surface SDL_surface(){
     }
     if(!window){
         printERROR("Window could not initialized");
-        return -1;
+        return NULL;
     }
-    scree = SDL_GetWindowSurface(window);
+    screenSurface = SDL_GetWindowSurface(window);
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format,0xFF,0xFF,0xFF));
     SDL_UpdateWindowSurface(window);
     return screenSurface;
-}
+}//get a screen surface
 
-void SDL_event(int choice){
+SDL_Renderer *SDL_renderer(){
+    SDL_Renderer *renderer = NULL;
+    return  renderer;
+}//get a renderer
+
+void SDL_event(bool keyboard_event){
     int num ;
-    if(choice){
-        while(1){
+    if(keyboard_event){
+        while(keyboard_event){
             SDL_Event event;//event
-            if(SDL_WaitEvent(&event)){
-                if(event.type == SDL_QUIT){
-                    break;
-                } else if(event.type == SDL_KEYDOWN){
-                    if(event.key.keysym.sym == SDLK_ESCAPE){
-                        break;
-                    }
-                }else if(event.type == SDL_KEYUP){
-
-                }
-            }
+//            if(SDL_WaitEvent(&event)){
+//                if(event.type == SDL_QUIT){
+//                    break;
+//                } else if(event.type == SDL_KEYDOWN){
+//                    if(event.key.keysym.sym == SDLK_ESCAPE){
+//                        break;
+//                    }
+//                }else if(event.type == SDL_KEYUP){
+//
+//                }
+//            }
             const Uint8 *state = SDL_GetKeyboardState(NULL);
             SDL_PumpEvents();
-            if(state[SDL_SCANCODE_DOWN]){
-
+            if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_LEFT]){
+                dir = LEFT;
+                success = true;
+            } else if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_RIGHT]){
+                dir = RIGHT;
+                success = true;
+            }else if(state[SDL_SCANCODE_ESCAPE]){
+                success = false;
+                exit(0);
             }
         }
+    }else{
+        int delay = 200;
+        SDL_Delay( delay ); // time between frames (ms)
     }
+    //return;
 }
 
-int SDL_quit(){
+void SDL_mouseevent(bool mouse_event){
+
+}
+
+void SDL_quit(SDL_Window *window){
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
 int main(int argc, char *argv[]) {
-    int i, j, iteration;
+    int i, j, k, iteration;
     char file[1000];
     char empty[1000];
     if(argc > 1){
@@ -83,17 +106,42 @@ int main(int argc, char *argv[]) {
                     file[i-1] = '\0';
                 }
                 while (fgets(empty,150,stdin));
-            }
-        }while(file[strlen(file) - 1] != 't' || file[strlen(file) - 2] != 'x' || file[strlen(file) - 3] != 't' || file[strlen(file) - 4] != '.' ||){
-
-        };
-    }else{
-        strcpy(file,argv[1]);
+            }while(file[strlen(file) - 1] != 't' || file[strlen(file) - 2] != 'x' || file[strlen(file) - 3] != 't' || file[strlen(file) - 4] != '.');
+        }else{
+            strcpy(file,argv[1]);
+        }
     }
     if(argc > 2){
         int length_2 = strlen(argv[2]);
-
+        for(j = 0; j < length_2; ++j){
+            if(argv[2][i] < '0' || argv[2][i] > '9'){
+                break;
+            }
+        }
+        if(j == length_2){
+            iteration = atoi(argv[2]);
+        } else{
+            while(1){
+                printf("Wrong iteration number! Please enter a correct number:");
+                fgets(empty,150,stdin);
+                for(j = strlen(empty); empty[j - 1] == '\n' || empty[j - 1] == '\r'; j--){
+                    empty[j - 1] = '\0';
+                }
+                for (k = 0; k < strlen(empty); ++k) {
+                    if(empty[k] < '0' || empty[k] > '9'){
+                        break;
+                    }
+                }
+                if(k == strlen(empty)){
+                    iteration = atoi(empty);
+                    while (fgets(empty,150, stdin));
+                    break;
+                }
+                while (fgets(empty,150,stdin));
+            }
+        }
     }
-    game(file,iteration);
+    user_choice(file,iteration);
+
     return 0;
 }

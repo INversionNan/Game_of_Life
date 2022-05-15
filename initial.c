@@ -5,11 +5,12 @@
 int Map1[M][N] = {0};
 int Map2[M][N] = {0};
 
-int load_cell(FILE *file){
+int load_cell(FILE *file, int length, int width){
     int i, j;
     char ch = '\0';
-    for(i = 0; i < Length; i++){
-        for (j = 0; j < Width; j++) {
+    rewind(file);
+    for(i = 0; i < length; i++){
+        for (j = 0; j < width; j++) {
             fscanf(file,"%c",&ch);
             if(ch == '0'){
                 Map1[i][j] = 0;
@@ -34,13 +35,14 @@ void initGrid(int *length, int *width, char *file){
     window = SDL_window();
     screenSurface = SDL_surface();
     if ((filename = fopen(file,"r")) == NULL){
-        printf("Failed to open the map file.\n");
+        filename = fopen(file,"w+");
     } else{
-        filename = fopen(file,"r") == NULL;
+        filename = fopen(file,"r");
     }
     if(!fgets(read,150,filename)){
         printf("The file is empty!\n");
         printf("Please modify file contents to complete initialization.");
+        //return -1;
     }
     for(int i = 0;i < strlen(read) && (read[i] != '\r' || read[i] !='\n'); i++){
         if(read[i] == '0' || read[i] == '1'){
@@ -63,13 +65,14 @@ void initGrid(int *length, int *width, char *file){
                 printf("Your input is wrong. Please input 1 on behalf of survive, 0 on behalf of death.\n");
             }
             if(p_begin[j][i]){
-                show_cell(window, screenSurface, 200 * i, 200 * j);
+                show_grid(window, screenSurface, 200 * i, 200 * j);
             } else{
                 continue;
             }
         }
     }
     fclose(filename);
+    //return 0;
 }
 
 //void initMap(int Map[Length][Width]){

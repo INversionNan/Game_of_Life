@@ -1,4 +1,5 @@
 #include "main.h"
+#include "game.h"
 
 void show_map(SDL_Window *window, SDL_Surface *screenSurface){
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format,0xFF,0xFF,0xFF));
@@ -36,17 +37,121 @@ int cell_judge(int cell_survive,int neighbour_survive){
     }else return 0;
 }//judge whether this cell survives or not; 0 is death, 1 is survival.
 
-void cell_change(int Length, int Width, int Grid[Length][Width]){
+void cell_change(int Length, int Width){
+//    int NeighborNumber;
+//    for(int i = 0; i < Length; ++i){
+//        for (int j = 0; j < Width; ++j) {
+//
+//        }
+//    }
+    p_next[0][0] = cell_judge(p_begin[0][0],
+                              p_begin[0][1] + p_begin[1][1] + p_begin[1][0]);
+    p_next[0][Width - 1] = cell_judge(p_begin[0][Width - 1],
+                                      p_begin[0][Width - 2] + p_begin[1][Width - 1]+p_begin[1][Width - 2]);
+    p_next[Length - 1][0] = cell_judge(p_next[Length-1][0],
+                                       p_begin[Length-2][1] + p_begin[Length - 1][1]+p_begin[Length-2][0]);
+    p_next[Length - 1][Width - 1] = cell_judge(p_next[Length - 1][Width - 1],
+                                               p_begin[Length - 2][Width - 1] +p_begin[Length - 1][Width - 2] + p_begin[Length - 2][Width - 2]);
 
-    int NeighborNumber;
-    for(int i = 0; i < Length; ++i){
-        for (int j = 0; j < Width; ++j) {
-
-        }
+    for(int i = 1; i < Length - 1; ++i){
+        p_next[i][0] = cell_judge(p_next[i][0],p_next[i - 1][0] + p_next[i + 1][0] + p_next[i][1]+p_next[i + 1][1]);
+    }
+    for(int j = 1; j < Width - 1; ++j){
+        p_next[0][j] = cell_judge(p_next[0][j],p_next[0][j + 1] +p_next[0][j - 1]+p_next[1][j + 1]+p_next[0][j]);
     }
 }//change the cell in the map
 
-void game(char *file, int iteration){
+void interface(){
+    printf("Please enter your choice\n");
+    printf("1)Initialize the map by modifying the file\n");
+    printf("2)Initialize the map by mouse click\n");
+    printf("3)Quit\n");
+    printf("Option:");
+    // user choice interface
+}
+
+void end(){
+    printf("Game is over!\n");
+    exit(0);
+}
+
+void user_choice(char *file, int iteration){
+    char a = '1';
+    while(a != '3'){
+        while (1){
+            interface();
+            int count = 0;
+            scanf("%c",&a);
+            while(getchar()!='\n') count ++;
+            if(count > 0){
+                printf("\nSorry, the option you enter was invalid, please try again.\n\n");
+                continue;
+            }else{
+                break;
+            }
+        }
+        switch (a) {
+            case '1':game_file(file,iteration); break;// modify file mode
+            case '2':game_click(file,iteration); break;//mouse click mode
+            case '3':
+                exit(0);break;//exit program
+            default:
+                printf("\nSorry, the option you enter was invalid, please try again.\n");
+                break;
+        }
+    }
+}
+
+void game_file(char *file, int iteration){
+    SDL_Window *window = NULL;
+    SDL_Surface *screenSurface = NULL;
+
+    int Length;// Map length
+    int Width;//Map width
+
+    p_begin = (int **)malloc(sizeof (int *));
+    p_next = (int **) malloc(sizeof (int *)*Length);
+    p_cell = (int **) malloc(sizeof (int *)*Length);//Dynamically allocate the space of a two-dimensional array
+
+    initGrid(&Length,&Width,file);
+    //if(initGrid(&Length,&Width,file) == -1){
+    //printf("");
+    //}// init the game of life
+    window = SDL_window();// Get a window
+    screenSurface = SDL_surface();// Get a screen surface
+    show_survive(window, screenSurface, Length, Width);
+
+    success = true;
+
+    SDL_event(success);
+
+    for(int i = 0; i < Length; ++i){
+        p_next[i] = (int *) malloc(Length * sizeof (int) );
+        memset(p_next[i],0,sizeof (p_next[i][0]));
+    }
+    for(int i = 0; i < Length; ++i){
+        p_cell[i] = (int *) malloc(Length * sizeof (int) );
+        memset(p_cell[i],0,sizeof (p_cell[i][0]));
+    }
+    while(1){
+        if(iteration < 0){
+            break;
+        }
+        show_map(window,screenSurface);
+        cell_change(Length,Width);
+        save(Length, Width, file, window, screenSurface);
+        SDL_event(success);
+        if(game_over(Length,Width)){
+            break;
+        } else{
+
+        }
+    }
+    save(Length, Width, window, screenSurface,file);//save the result in the file
+    SDL_quit(window);
+}// The game framework
+
+void game_click(char *file, int iteration){
     SDL_Window *window = NULL;
     SDL_Surface *screenSurface = NULL;
 
@@ -57,7 +162,10 @@ void game(char *file, int iteration){
     int **p_next = (int **) malloc(sizeof (int *)*Length);
     int **p_cell = (int **) malloc(sizeof (int *)*Length);//Dynamically allocate the space of a two-dimensional array
 
-    initGrid(&Length,&Width,file);// init the game of life
+    initGrid(&Length,&Width,file);
+    //if(initGrid(&Length,&Width,file) == -1){
+        //printf("");
+    //}// init the game of life
     window = SDL_window();// Get a window
     screenSurface = SDL_surface();// Get a screen surface
     show_survive(window, screenSurface, Length, Width);
@@ -77,5 +185,17 @@ void game(char *file, int iteration){
 
     }
     save(Length, Width, window, screenSurface,file);//save the result in the file
+    SDL_quit(window);
 }// The game framework
 
+bool game_over(int Length, int Width,int iteration){
+    int count_num;
+//    for(int i = 0; i < Length; ++i){
+//        for(int j = 0; j < Width; ++j){
+//            p_cell[i][j] = p_begin[i][j];
+//        }
+//
+//    }
+
+    return false
+}
