@@ -85,7 +85,38 @@ void SDL_event(bool keyboard_event){
 }
 
 void SDL_mouseevent(bool mouse_event){
-
+    int num ;
+    if(keyboard_event){
+        while(keyboard_event){
+            SDL_Event event;//event
+//            if(SDL_WaitEvent(&event)){
+//                if(event.type == SDL_QUIT){
+//                    break;
+//                } else if(event.type == SDL_KEYDOWN){
+//                    if(event.key.keysym.sym == SDLK_ESCAPE){
+//                        break;
+//                    }
+//                }else if(event.type == SDL_KEYUP){
+//
+//                }
+//            }
+            const Uint8 *state = SDL_GetKeyboardState(NULL);
+            SDL_PumpEvents();
+            if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_LEFT]){
+                dir = LEFT;
+                success = true;
+            } else if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_RIGHT]){
+                dir = RIGHT;
+                success = true;
+            }else if(state[SDL_SCANCODE_ESCAPE]){
+                success = false;
+                exit(0);
+            }
+        }
+    }else{
+        int delay = 200;
+        SDL_Delay( delay ); // time between frames (ms)
+    }
 }
 
 void SDL_quit(SDL_Window *window){
