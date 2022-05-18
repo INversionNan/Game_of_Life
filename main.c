@@ -86,8 +86,8 @@ void SDL_event(bool keyboard_event){
 
 void SDL_mouseevent(bool mouse_event){
     int num ;
-    if(keyboard_event){
-        while(keyboard_event){
+    if(mouse_event){
+        while(mouse_event){
             SDL_Event event;//event
 //            if(SDL_WaitEvent(&event)){
 //                if(event.type == SDL_QUIT){

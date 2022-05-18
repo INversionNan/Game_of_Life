@@ -182,8 +182,8 @@ void game_click(char *file, int iteration){
             break;
         }
         show_map(window,screenSurface);
-        SDL_mouseevent(bool mouse_event);
-        game_over();
+        //SDL_mouseevent(bool mouse_event);
+        //game_over();
     }
     save(Length, Width, window, screenSurface,file);//save the result in the file
     SDL_quit(window);
@@ -198,5 +198,5 @@ bool game_over(int Length, int Width,int iteration){
 //
 //    }
 
-    return false
+    return false;
 }
