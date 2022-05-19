@@ -6,13 +6,13 @@ int **p_begin;
 int **p_cell;
 
 void show_map(SDL_Window *window, SDL_Surface *screenSurface){
-    SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format,0xFF,0xFF,0xFF));
+    SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format,0xFF, 0xFF, 0xFF));
     SDL_UpdateWindowSurface(window);
 }
 
 void show_grid(SDL_Window *window, SDL_Surface *screenSurface, int a, int b){
     SDL_Rect array = {a,b,150,150};
-    SDL_FillRect(screenSurface,&array, SDL_MapRGB(screenSurface->format, 0, 0, 0));
+    SDL_FillRect(screenSurface,&array, SDL_MapRGB(screenSurface->format, 218, 112, 214));
     SDL_UpdateWindowSurface(window);
 }
 
@@ -42,27 +42,39 @@ int cell_judge(int cell_survive,int neighbour_survive){
 }//judge whether this cell survives or not; 0 is death, 1 is survival.
 
 void cell_change(int Length, int Width){
+
 //    int NeighborNumber;
 //    for(int i = 0; i < Length; ++i){
 //        for (int j = 0; j < Width; ++j) {
 //
 //        }
 //    }
+
+    for(int m = 1; m < Width - 1; ++m){
+        for(int n = 1; n < Length - 1; ++n){
+            p_next[m][n] = cell_judge(p_begin[m][n],p_begin[m - 1][n] + p_begin[m - 1][n - 1] + p_begin[m - 1][n + 1] + p_begin[m + 1][n] + p_begin[m + 1][n + 1] + p_begin[m + 1][n - 1] + p_begin[m][n + 1]+p_begin[m][n - 1]);
+        }
+    }
+    //Edges
+    for(int i = 1; i < Width - 1; ++i){
+        p_next[0][i] = cell_judge(p_begin[0][i],p_begin[0][i + 1] +p_begin[0][i - 1]+p_begin[1][i + 1]+p_next[1][i - 1] + p_begin[1][i]);
+        p_next[Width - 1][i] = cell_judge(p_begin[Width - 1][i],p_begin[Width - 2][i] + p_begin[Width - 1][i-1] + p_begin[Width - 1][i + 1] + p_begin[Width - 2][i - 1] + p_begin[Width - 2][i + 1]);
+    }
+    for(int j = 1; j < Length - 1; ++j){
+        p_next[j][0] = cell_judge(p_begin[j][0],p_begin[j - 1][0] + p_begin[j + 1][0] + p_begin[j][1] + p_begin[j + 1][1] + p_begin[j - 1][1]);
+        p_next[j][Length - 1] = cell_judge(p_begin[j][Length - 1],p_begin[j - 1][ Length - 1]+p_begin[j + 1][Length - 1] + p_begin[j][Length - 2] + p_begin[j - 1][Length - 2]+ p_begin[j + 1][Length - 2]);
+    }
+
+    //Corners
     p_next[0][0] = cell_judge(p_begin[0][0],
                               p_begin[0][1] + p_begin[1][1] + p_begin[1][0]);
     p_next[0][Width - 1] = cell_judge(p_begin[0][Width - 1],
                                       p_begin[0][Width - 2] + p_begin[1][Width - 1]+p_begin[1][Width - 2]);
-    p_next[Length - 1][0] = cell_judge(p_next[Length-1][0],
+    p_next[Length - 1][0] = cell_judge(p_begin[Length-1][0],
                                        p_begin[Length-2][1] + p_begin[Length - 1][1]+p_begin[Length-2][0]);
-    p_next[Length - 1][Width - 1] = cell_judge(p_next[Length - 1][Width - 1],
+    p_next[Length - 1][Width - 1] = cell_judge(p_begin[Length - 1][Width - 1],
                                                p_begin[Length - 2][Width - 1] +p_begin[Length - 1][Width - 2] + p_begin[Length - 2][Width - 2]);
 
-    for(int i = 1; i < Length - 1; ++i){
-        p_next[i][0] = cell_judge(p_next[i][0],p_next[i - 1][0] + p_next[i + 1][0] + p_next[i][1]+p_next[i + 1][1]);
-    }
-    for(int j = 1; j < Width - 1; ++j){
-        p_next[0][j] = cell_judge(p_next[0][j],p_next[0][j + 1] +p_next[0][j - 1]+p_next[1][j + 1]+p_next[0][j]);
-    }
 }//change the cell in the map
 
 void interface(){
@@ -127,26 +139,26 @@ void game_file(char *file, int iteration){
     //printf("");
     //}// init the game of life
     //printf("11111111111\n");
-
-    rewind(fopen(file,"r"));
+    FILE *filename = fopen(file,"r");
+    rewind(filename);
 
     for(int i = 0; i < Width; ++i){
 //        printf("%s\n",read);
-        fgets(line,150, fopen(file,"r"));
+        fgets(line,150, filename);
         p_begin[i] = (int *) malloc(sizeof (int)*(Length));
-        printf("%s",line);
+        //printf("%s",line);
         for(int j = 0 ; j < Length && (line[j] != '\r' && line[j] !='\n'); ++j){
             //printf("%c\n",line[i]);
             if(line[j] == '0' || line[j] == '1'){
                 p_begin[i][j] = line[j] - '0';
-                printf("%d\n",p_begin[i][j]);
+                //printf("%d\n",p_begin[i][j]);
             }else{
                 printf("Your input is wrong. Please input 1 on behalf of survive, 0 on behalf of death.\n");
                 break;
             }
             //printf("%d\n",p_begin[i][j]);
             if(p_begin[i][j] == 1){
-                //printf("111111\n");
+                //printf("111111\n");`
                 show_grid(window, screenSurface, 150 * j, 150 * i);
             } else{
                 continue;
