@@ -45,12 +45,12 @@ void initGrid(int *length, int *width, char *file){
         //return -1;
     }
 //    printf("%s",read);
+    count = 0;
     for(int i = 0;i < strlen(read) && (read[i] != '\r' && read[i] !='\n'); i++){
         if(read[i] == '0' || read[i] == '1'){
             count++;
         }
     }
-    printf("%d\n",count);
     *width = count;
     //printf("%d\n",width);
 //    for (int j = 0; j < ; ++j) {

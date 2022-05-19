@@ -127,16 +127,19 @@ void game_file(char *file, int iteration){
     //printf("");
     //}// init the game of life
     //printf("11111111111\n");
+
     rewind(fopen(file,"r"));
+
     for(int i = 0; i < Width; ++i){
 //        printf("%s\n",read);
         fgets(line,150, fopen(file,"r"));
         p_begin[i] = (int *) malloc(sizeof (int)*(Length));
+        printf("%s",line);
         for(int j = 0 ; j < Length && (line[j] != '\r' && line[j] !='\n'); ++j){
-            printf("%c\n",line[i]);
+            //printf("%c\n",line[i]);
             if(line[j] == '0' || line[j] == '1'){
                 p_begin[i][j] = line[j] - '0';
-                //printf("%d\n",p_begin[j][i]);
+                printf("%d\n",p_begin[i][j]);
             }else{
                 printf("Your input is wrong. Please input 1 on behalf of survive, 0 on behalf of death.\n");
                 break;
