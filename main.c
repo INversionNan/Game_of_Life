@@ -17,7 +17,7 @@ SDL_Window *SDL_window(int length, int width){
     if(SDL_Init(SDL_INIT_VIDEO) < 0){
         printERROR("Initialization failed");
     }else{
-        window = SDL_CreateWindow("Game of Life", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Length*200, Width*200, SDL_WINDOW_SHOWN);
+        window = SDL_CreateWindow("Game of Life", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Length*150, Width*150, SDL_WINDOW_SHOWN);
     }
     if(!window){
         printERROR("Window could not initialized");

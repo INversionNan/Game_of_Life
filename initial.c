@@ -44,12 +44,15 @@ void initGrid(int *length, int *width, char *file){
         printf("Please modify file contents to complete initialization.");
         //return -1;
     }
+//    printf("%s",read);
     for(int i = 0;i < strlen(read) && (read[i] != '\r' && read[i] !='\n'); i++){
         if(read[i] == '0' || read[i] == '1'){
             count++;
         }
     }
+    printf("%d\n",count);
     *width = count;
+    //printf("%d\n",width);
 //    for (int j = 0; j < ; ++j) {
 //
 //    }
@@ -58,23 +61,27 @@ void initGrid(int *length, int *width, char *file){
     for(count = 0; fgets(read,150,filename) != NULL; count++);
     *length = count + 1;
     //printf("%d\n",*length);
-    window = SDL_window(*length, *width);
-    screenSurface = SDL_surface(window);
+
+    //window = SDL_window(*length, *width);
+    //screenSurface = SDL_surface(window);
+    //printf("11111111111\n");
     rewind(filename);
     for(int j = 0; j < *width; ++j){
+        //printf("11111111111\n");
 //        printf("%s\n",read);
-        fgets(read,150,stdin);
+        fgets(read,150,filename);
+        //printf("%s\n",read);
         p_begin[j] = (int *) malloc(sizeof (int)*(count+1));
         for(int i = 0;i < *length && (read[i] != '\r' && read[i] !='\n'); ++i){
             //printf("%c\n",read[i]);
             if(read[i] == '0' || read[i] == '1'){
                 p_begin[j][i] = read[i] - '0';
                 //printf("%d\n",p_begin[j][i]);
-            }
-            else{
+            }else{
                 printf("Your input is wrong. Please input 1 on behalf of survive, 0 on behalf of death.\n");
                 break;
             }
+            //printf("%d\n",p_begin[j][i]);
 //            if(p_begin[j][i] == 1){
 //                //printf("111111\n");
 //                show_grid(window, screenSurface, 200 * i, 200 * j);
