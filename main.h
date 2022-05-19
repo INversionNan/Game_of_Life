@@ -12,7 +12,10 @@
 
 //int Length;
 //int Width;
-int choice = 1;
+//int choice = 1;
+//int dir;
+//bool success;
+
 //SDL_Window *window;
 //SDL_Surface *screen;
 
@@ -34,8 +37,8 @@ void show_map(SDL_Window *window, SDL_Surface *screenSurface);
 void show_grid(SDL_Window *window, SDL_Surface *screen, int c, int d);
 void show_survive(SDL_Window *window, SDL_Surface *screen, int a, int b);
 
-SDL_Window *SDL_window();
-SDL_Surface *SDL_surface();
+SDL_Window *SDL_window(int length, int width);
+SDL_Surface *SDL_surface(SDL_Window *window);
 void SDL_event(bool keyboard_event);
 void SDL_mouseevent(bool mouse_event);
 void SDL_quit(SDL_Window *window);

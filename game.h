@@ -12,10 +12,10 @@
 #define RIGHT 2
 #define DOWN 2
 
-int dir;
-bool success;
-int **p_next;
-int **p_begin;
-int **p_cell;
+//extern int dir;
+//extern bool success;
+//extern int **p_next;
+//extern int **p_begin;
+//extern int **p_cell;
 
 #endif //GAME_C_GAME_H

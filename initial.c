@@ -32,19 +32,19 @@ void initGrid(int *length, int *width, char *file){
     char read[200];
     int count;
     int **p_begin = (int **)malloc(sizeof (int *));
-    window = SDL_window();
-    screenSurface = SDL_surface();
+
     if ((filename = fopen(file,"r")) == NULL){
         filename = fopen(file,"w+");
     } else{
         filename = fopen(file,"r");
     }
+
     if(!fgets(read,150,filename)){
         printf("The file is empty!\n");
         printf("Please modify file contents to complete initialization.");
         //return -1;
     }
-    for(int i = 0;i < strlen(read) && (read[i] != '\r' || read[i] !='\n'); i++){
+    for(int i = 0;i < strlen(read) && (read[i] != '\r' && read[i] !='\n'); i++){
         if(read[i] == '0' || read[i] == '1'){
             count++;
         }
@@ -53,25 +53,39 @@ void initGrid(int *length, int *width, char *file){
 //    for (int j = 0; j < ; ++j) {
 //
 //    }
+    //printf("%d",count);
+
     for(count = 0; fgets(read,150,filename) != NULL; count++);
     *length = count + 1;
+    //printf("%d\n",*length);
+    window = SDL_window(*length, *width);
+    screenSurface = SDL_surface(window);
     rewind(filename);
-    for(int j = 0; fgets(read,150,filename) != NULL; j++){
+    for(int j = 0; j < *width; ++j){
+//        printf("%s\n",read);
+        fgets(read,150,stdin);
         p_begin[j] = (int *) malloc(sizeof (int)*(count+1));
-        for(int i = 0;i < strlen(read) &&(read[i] != '\r' || read[i] !='\n'); ++i){
+        for(int i = 0;i < *length && (read[i] != '\r' && read[i] !='\n'); ++i){
+            //printf("%c\n",read[i]);
             if(read[i] == '0' || read[i] == '1'){
                 p_begin[j][i] = read[i] - '0';
-            } else{
+                //printf("%d\n",p_begin[j][i]);
+            }
+            else{
                 printf("Your input is wrong. Please input 1 on behalf of survive, 0 on behalf of death.\n");
+                break;
             }
-            if(p_begin[j][i]){
-                show_grid(window, screenSurface, 200 * i, 200 * j);
-            } else{
-                continue;
-            }
+//            if(p_begin[j][i] == 1){
+//                //printf("111111\n");
+//                show_grid(window, screenSurface, 200 * i, 200 * j);
+//            } else{
+//                continue;
+//            }
         }
     }
+    //printf("11111111111\n");
     fclose(filename);
+    //printf("11111111111\n");
     //return 0;
 }
 
