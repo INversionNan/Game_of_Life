@@ -30,7 +30,7 @@ void end();
 void user_choice(char *file, int iteration);
 void game_file(char *file, int iteration);
 void game_click(char *file, int iteration);
-bool game_over(int Length, int Width,int iteration);
+bool game_over(int Length, int Width,int iteration,int num);
 
 
 void show_map(SDL_Window *window, SDL_Surface *screenSurface);
@@ -40,7 +40,7 @@ void show_survive(SDL_Window *window, SDL_Surface *screen, int a, int b);
 SDL_Window *SDL_window(int length, int width);
 SDL_Surface *SDL_surface(SDL_Window *window);
 void SDL_event(bool keyboard_event);
-void SDL_mouseevent(bool mouse_event);
+int SDL_mouseevent(bool mouse_event,void *opaque);
 void SDL_quit(SDL_Window *window);
 
 int load_cell(FILE *file, int length, int width);

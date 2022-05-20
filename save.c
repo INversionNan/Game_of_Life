@@ -7,7 +7,7 @@ void save(int length, int width, char *filename, SDL_Window *window, SDL_Surface
 //    if(!user_p){
 //        return;
 //    }
-    if ((file= fopen("save.txt","w+")) == NULL){
+    if ((file= fopen(filename,"w+")) == NULL){
         printf("Failed to open the save file.\n");
         exit(1);
     }
@@ -18,9 +18,9 @@ void save(int length, int width, char *filename, SDL_Window *window, SDL_Surface
 //            }
 //        }
 //    }
-    for(i = 0; i < length; ++i){
-        for(j = 0; j < width; ++j){
-
+    for(i = 0; i < width; ++i){
+        for(j = 0; j < length; ++j){
+            fprintf(file,"%d",)
         }
     }
     fclose(file);

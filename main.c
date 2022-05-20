@@ -78,14 +78,36 @@ void SDL_event(bool keyboard_event){
             if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_LEFT]){
                 dir = LEFT;
                 success = true;
+                while(success){
+                    const Uint8 *state_1 = SDL_GetKeyboardState(NULL);
+                    SDL_PumpEvents();
+                    if(state_1[SDL_SCANCODE_UP] || state_1[SDL_SCANCODE_LEFT]){
+                        continue;
+                    }else{
+                        break;
+                    }
+                }
+                break;
             } else if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_RIGHT]){
                 dir = RIGHT;
                 success = true;
+                while(success){
+                    const Uint8 *state_2 = SDL_GetKeyboardState(NULL);
+                    SDL_PumpEvents();
+                    if(state_2[SDL_SCANCODE_DOWN] || state_2[SDL_SCANCODE_RIGHT]){
+                        continue;
+                    }else{
+                        break;
+                    }
+                }
+                break;
             }else if(state[SDL_SCANCODE_ESCAPE]){
                 success = false;
                 exit(0);
             }
+            //printf("11111111111\n");
         }
+        success = false;
     }else{
         int delay = 200;
         SDL_Delay( delay ); // time between frames (ms)
@@ -93,45 +115,59 @@ void SDL_event(bool keyboard_event){
     //return;
 }
 
-void SDL_mouseevent(bool mouse_event){
-    int num ;
-    if(mouse_event){
-        while(mouse_event){
-            SDL_Event event;//event
-//            if(SDL_WaitEvent(&event)){
-//                if(event.type == SDL_QUIT){
-//                    break;
-//                } else if(event.type == SDL_KEYDOWN){
-//                    if(event.key.keysym.sym == SDLK_ESCAPE){
-//                        break;
-//                    }
-//                }else if(event.type == SDL_KEYUP){
-//
-//                }
-//            }
-            const Uint8 *state = SDL_GetKeyboardState(NULL);
-            SDL_PumpEvents();
-            if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_LEFT]){
-                dir = LEFT;
-                success = true;
-            } else if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_RIGHT]){
-                dir = RIGHT;
-                success = true;
-            }else if(state[SDL_SCANCODE_ESCAPE]){
-                success = false;
-                exit(0);
+int SDL_mouseevent(bool mouse_event,void *opaque){
+    SDL_Event ev;
+    int quit = 0;
+    //while (!quit)
+    while (SDL_PollEvent(&ev))
+        {
+            if (SDL_KEYDOWN == ev.type) // SDL_KEYUP
+            {
+                if (SDLK_DOWN == ev.key.keysym.sym)
+                {
+                    printf("SDLK_DOWN ...............\n");
+                }else if (SDLK_UP == ev.key.keysym.sym){
+                    printf("SDLK_UP ...............\n");
+                }else if (SDLK_LEFT == ev.key.keysym.sym){
+                    printf("SDLK_LEFT ...............\n");
+                }else if (SDLK_RIGHT == ev.key.keysym.sym){
+                    printf("SDLK_RIGHT ...............\n");
+                }
+            }else if (SDL_MOUSEBUTTONDOWN == ev.type){
+            if(SDL_BUTTON_LEFT == ev.button.button)
+            {
+                int px = ev.button.x;
+                int py = ev.button.y;
+                printf("x, y %d %d ...............\n", px, py);
+            }
+            else if(SDL_BUTTON_RIGHT == ev.button.button)
+            {
+                int px = ev.button.x;
+                int py = ev.button.y;
+                printf("x, y %d %d ...............\n", px, py);
             }
         }
-    }else{
-        int delay = 200;
-        SDL_Delay( delay ); // time between frames (ms)
+        else if (SDL_MOUSEMOTION == ev.type)
+        {
+            int px = ev.motion.x;
+            int py = ev.motion.y;
+
+            printf("x, y %d %d ...............\n", px, py);
+        }
+        else if (SDL_QUIT == ev.type)
+        {
+            printf("SDL_QUIT ...............\n");
+            return 0;
+        }
     }
+    return 0;
 }
 
 void SDL_quit(SDL_Window *window){
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
+
 int main(int argc, char *argv[]) {
 //    int i, j, k, iteration;
 //    char file[1000];
