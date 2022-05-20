@@ -22,7 +22,7 @@ int load_cell(FILE *file, int length, int width){
         }
         fscanf(file,"%c",&ch);
     }
-
+    fclose(file);
 }
 
 void initGrid(int *length, int *width, char *file){
@@ -31,7 +31,7 @@ void initGrid(int *length, int *width, char *file){
     FILE *filename;
     char read[200];
     int count;
-    int **p_begin = (int **)malloc(sizeof (int *));
+    int **p_grid = (int **)malloc(sizeof (int *));
 
     if ((filename = fopen(file,"r")) == NULL){
         filename = fopen(file,"w+");
@@ -51,16 +51,16 @@ void initGrid(int *length, int *width, char *file){
             count++;
         }
     }
-    *width = count;
-    //printf("%d\n",width);
+    *length = count;
+//    printf("%d\n",*width);
 //    for (int j = 0; j < ; ++j) {
 //
 //    }
     //printf("%d",count);
 
     for(count = 0; fgets(read,150,filename) != NULL; count++);
-    *length = count + 1;
-    //printf("%d\n",*length);
+    *width = count + 1;
+//    printf("%d\n",*length);
 
     //window = SDL_window(*length, *width);
     //screenSurface = SDL_surface(window);
@@ -69,13 +69,14 @@ void initGrid(int *length, int *width, char *file){
     for(int j = 0; j < *width; ++j){
         //printf("11111111111\n");
 //        printf("%s\n",read);
+        fflush(stdin);
         fgets(read,150,filename);
         //printf("%s\n",read);
-        p_begin[j] = (int *) malloc(sizeof (int)*(count+1));
+        p_grid[j] = (int *) malloc(sizeof (int)*(*length));
         for(int i = 0;i < *length && (read[i] != '\r' && read[i] !='\n'); ++i){
             //printf("%c\n",read[i]);
             if(read[i] == '0' || read[i] == '1'){
-                p_begin[j][i] = read[i] - '0';
+                p_grid[j][i] = read[i] - '0';
                 //printf("%d\n",p_begin[j][i]);
             }else{
                 printf("Your input is wrong. Please input 1 on behalf of survive, 0 on behalf of death.\n");
@@ -91,6 +92,7 @@ void initGrid(int *length, int *width, char *file){
         }
     }
     //printf("11111111111\n");
+    free(p_grid);
     fclose(filename);
     //printf("11111111111\n");
     //return 0;

@@ -45,5 +45,5 @@ void SDL_quit(SDL_Window *window);
 
 int load_cell(FILE *file, int length, int width);
 void initGrid(int *length, int *width, char *file);
-void save(int length, int width, char *filename, SDL_Window *window, SDL_Surface *screen);
+void save(int length, int width, char *filename, SDL_Window *window, SDL_Surface *screen, int **p_cell);
 #endif //GAME_OF_LIFE_MAIN_H

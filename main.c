@@ -8,8 +8,8 @@ int dir;
 bool success;
 
 SDL_Window *SDL_window(int length, int width){
-    int Length;//Map length
-    int Width;//Map width
+    int Length = 0;//Map length
+    int Width = 0;//Map width
     Length = length;
     Width = width;
     SDL_Window *window = NULL;
