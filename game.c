@@ -8,7 +8,7 @@ int **p_cell;
 void freeAll(){
     free(p_begin);
     free(p_next);
-    free(p_cell);
+    //free(p_cell);
 }
 
 void show_map(SDL_Window *window, SDL_Surface *screenSurface){
@@ -42,9 +42,14 @@ int cell_judge(int cell_survive,int neighbour_survive){
         } else{
             return 1;
         }
-    }else if(cell_survive == 0 && neighbour_survive == 3){
-        return 1;
-    }else return 0;
+    }
+    if(cell_survive == 0){
+        if(neighbour_survive == 3){
+            return 1;
+        } else{
+            return 0;
+        }
+    }
 }//judge whether this cell survives or not; 0 is death, 1 is survival.
 
 void cell_change(int Length, int Width){
@@ -63,7 +68,7 @@ void cell_change(int Length, int Width){
     }
     //Edges
     for(int i = 1; i < Length - 1; ++i){
-        p_next[0][i] = cell_judge(p_begin[0][i],p_begin[0][i + 1] +p_begin[0][i - 1]+p_begin[1][i + 1]+p_next[1][i - 1] + p_begin[1][i]);
+        p_next[0][i] = cell_judge(p_begin[0][i],p_begin[0][i + 1] +p_begin[0][i - 1]+p_begin[1][i + 1]+p_begin[1][i - 1] + p_begin[1][i]);
         p_next[Width - 1][i] = cell_judge(p_begin[Width - 1][i],p_begin[Width - 2][i] + p_begin[Width - 1][i-1] + p_begin[Width - 1][i + 1] + p_begin[Width - 2][i - 1] + p_begin[Width - 2][i + 1]);
     }
     for(int j = 1; j < Width - 1; ++j){
@@ -97,6 +102,7 @@ void cell_copy(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurf
         memset(p_next[i],0,sizeof (p_next[i]));
     }
     fclose(file);
+    //printf("1111111\n");
 }
 
 void read(int length, int width, char *filename){
@@ -190,10 +196,10 @@ void game_file(char *file, int iteration){
     p_cell = (int **) malloc(sizeof (int *)*Width);//Dynamically allocate the space of a two-dimensional array
     //printf("11111111111\n");
     //Width = 6, Length = 5
-    printf("%d\n",Width);
-    printf("%d\n",Length);
+//    printf("%d\n",Width);
+//    printf("%d\n",Length);
     window = SDL_window(Length, Width);// Get a window
-    printf("11111111111\n");
+//    printf("11111111111\n");
     screenSurface = SDL_surface(window);// Get a screen surface
     //if(initGrid(&Length,&Width,file) == -1){
     //printf("");
@@ -257,37 +263,40 @@ void game_file(char *file, int iteration){
         cell_copy(Length,Width,window,screenSurface,file);
         show_survive(window, screenSurface, Length, Width);
 
-        rewind(filename);
+        FILE *fp_1 = fopen(file,"r");
+        rewind(fp_1);
         for(int i = 0; i < Width; ++i){
             fflush(stdin);
-            fgets(line,150,filename);
+            fgets(line,150,fp_1);
             for(int j = 0; j < Length && (line[j] != '\r' && line[j] !='\n'); ++j){
                 p_cell[i][j] = line[j] - '0';
             }
         }
         fflush(stdin);
-        fclose(filename);
+        fclose(fp_1);
 
         SDL_event(success);
-        printf("%d\n",count_play);
         if(game_over(Length,Width,iteration,count_play)){
 //            printf("1111\n");
             break;
         } else{
-            rewind(filename);
+            FILE *fp = fopen(file,"r");
+            rewind(fp);
             for(int i = 0; i < Width; ++i){
                 fflush(stdin);
-                fgets(line,150,filename);
+                fgets(line,150,fp);
                 for(int j = 0; j < Length && (line[j] != '\r' && line[j] !='\n'); ++j){
                     p_begin[i][j] = line[j] - '0';
                 }
             }
-            fclose(filename);
+            fclose(fp);
+            //printf("11111111111\n");
         }
     }
+    freeAll();
     //save(Length, Width, window, screenSurface,file);//save the result in the file
     SDL_quit(window);
-    freeAll();
+
 }// The game framework
 
 void game_click(char *file, int iteration){

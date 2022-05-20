@@ -14,15 +14,23 @@ SDL_Window *SDL_window(int length, int width){
     Width = width;
     SDL_Window *window = NULL;
     SDL_Surface *screenSurface = NULL;
-    if(SDL_Init(SDL_INIT_VIDEO) < 0){
+//    printf("000000000\n");
+    int rc;
+    if((rc=SDL_Init( SDL_INIT_VIDEO )) !=0){
+//        printf("999999\n");
+        //printf("Initialization failed SDL_Error: %s\n",SDL_GetError());
         printERROR("Initialization failed");
     }else{
+//        printf("111111111111\n");
         window = SDL_CreateWindow("Game of Life", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Length*150, Width*150, SDL_WINDOW_SHOWN);
     }
+//    printf("2222222222222\n");
     if(!window){
         printERROR("Window could not initialized");
+        //printf("Window could not initialized! SDL_Error: %s\n",SDL_GetError());
         return NULL;
     }
+//    printf("33333333333\n");
     screenSurface = SDL_GetWindowSurface(window);
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format,0xFF,0xFF,0xFF));
     SDL_UpdateWindowSurface(window);
@@ -30,8 +38,8 @@ SDL_Window *SDL_window(int length, int width){
 }//get a window
 
 SDL_Surface *SDL_surface(SDL_Window *window){
-    int Length;//Map length
-    int Width;//Map width
+    int Length = 0;//Map length
+    int Width = 0;//Map width
 //    Length = length;
 //    Width = width;
 //    SDL_Window *window = NULL;
@@ -218,7 +226,7 @@ int main(int argc, char *argv[]) {
 //        }
 //    }
     char *file = "game.txt";
-    int iteration = 5;
+    int iteration = 10;
     user_choice(file,iteration);
 
     return 0;
