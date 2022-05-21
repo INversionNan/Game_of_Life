@@ -127,7 +127,7 @@ void cell_init(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurf
         show_survive(window, screenSurface, Length, Width);
     }
     fclose(file);
-}
+}// init the cell map
 
 void cell_copy(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *filename){
     FILE *file = fopen(filename,"w+");
@@ -144,7 +144,7 @@ void cell_copy(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurf
     }
     fclose(file);
     //printf("1111111\n");
-}
+}// Assign the value to the cell pointer
 
 //void read(int length, int width, char *filename){
 //    FILE *file = fopen(filename,"w+");
@@ -187,7 +187,7 @@ void choice(){
 void end(){
     printf("Game is over!\n");
     exit(0);
-}
+}// End information
 
 void save_game(int length, int width, char *filename){
     int i,j;
@@ -239,14 +239,13 @@ void game_way(char *file, int iteration){
                 game_auto(file,iteration);
                 SDL_Quit(); break;//mouse click mode
             case '3':
-                SDL_Quit();
-                exit(0);break;//exit program
+                SDL_Quit();break;//exit program
             default:
                 printf("\nSorry, the option you enter was invalid, please try again.\n");
                 break;
         }
     }
-}
+}// Players want to play which way to continue the game
 
 
 void user_choice(char *file, int iteration){
@@ -290,8 +289,6 @@ void game_file(char *file, int iteration){
     char line[200];
 
     initGrid(&Length,&Width,file);// initial the grid map (read the file and get the length and with)
-
-    printf("");
 
     p_begin = (int **)malloc(sizeof (int *)*Width);
     p_next = (int **) malloc(sizeof (int *)*Width);
@@ -418,8 +415,6 @@ void game_auto(char *file, int iteration){
 
     initGrid(&Length,&Width,file);// initial the grid map (read the file and get the length and with)
 
-    printf("");
-
     p_begin = (int **)malloc(sizeof (int *)*Width);
     p_next = (int **) malloc(sizeof (int *)*Width);
     p_cell = (int **) malloc(sizeof (int *)*Width);//Dynamically allocate the space of a two-dimensional array
@@ -542,35 +537,38 @@ void game_click(char *file, int iteration){
     int Length;// Map length
     int Width;//Map width
     char line[200];
-    char b,c;
-
-    printf("\nPlease enter the length of the life of game:");
-    while (1){
-        int count = 0;
-        scanf("%c",&b);
-        while(getchar()!='\n') count ++;
-        if(count > 0){
-            printf("\nSorry, the length you enter was invalid, please try again.\n\n");
-            continue;
-        }else{
-            break;
+    int b,c;
+    bool get = true;
+    char ch[200];
+    while(get){
+        printf("\nPlease enter the length of the life of game:");
+        fgets(ch,150,stdin);
+        for(b = 0; b < strlen(ch);b++){
+            if(ch[b] == '\r' || ch[b] == '\n') break;
+            if(ch[b] >= '0' && ch[b] <= '9'){
+                get = false;
+            }else{
+                printf("\nYour input is wrong.\n");
+                break;
+            }
         }
-    }
-    Length = b - '0';//Get the length of the game
-
-    printf("\nPlease enter the with of the life of game:");
-    while (1){
-        int count = 0;
-        scanf("%c",&c);
-        while(getchar()!='\n') count ++;
-        if(count > 0){
-            printf("\nSorry, the length you enter was invalid, please try again.\n\n");
-            continue;
-        }else{
-            break;
+    }//Get the length of the game
+    Length = atoi(ch);
+    get = true;
+    while(get){
+        printf("\nPlease enter the width of the life of game:");
+        fgets(ch,150,stdin);
+        for(c = 0; c < strlen(ch);c++){
+            if(ch[c] == '\r' || ch[c] == '\n') break;
+            if(ch[c] >= '0' && ch[c] <= '9'){
+                get = false;
+            }else{
+                printf("\nYour input is wrong.\n");
+                break;
+            }
         }
-    }
-    Width = c - '0';//Get the width of the game
+    }//Get the width of the game
+    Width = atoi(ch);//Get the width of the game
 
     p_begin = (int **)malloc(sizeof (int *)*Width);
     p_next = (int **) malloc(sizeof (int *)*Width);

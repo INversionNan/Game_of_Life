@@ -23,7 +23,7 @@ int load_cell(FILE *file, int length, int width){
         fscanf(file,"%c",&ch);
     }
     fclose(file);
-}
+}// load the cell from reading a file
 
 void initGrid(int *length, int *width, char *file){
 
@@ -109,4 +109,4 @@ void initMap(int Length, int Width,int **Map){
             } else printf("■");
         }
     }
-}
+}// init the map of patterns

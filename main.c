@@ -97,7 +97,7 @@ void SDL_event(bool keyboard_event){
                         break;
                     }
                 }
-                break;
+                break;//Up and Left
             } else if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_RIGHT]){
                 dir = RIGHT;
                 success = true;
@@ -110,11 +110,11 @@ void SDL_event(bool keyboard_event){
                         break;
                     }
                 }
-                break;
+                break;//Down and Right
             }else if(state[SDL_SCANCODE_ESCAPE]){
                 success = false;
                 SDL_Quit();
-                exit(0);
+                exit(0);//Exit and quit
             }
             //printf("11111111111\n");
         }
@@ -124,7 +124,48 @@ void SDL_event(bool keyboard_event){
         SDL_Delay( delay ); // time between frames (ms)
     }
     //return;
-}
+}// key event one
+
+void SDL_keyevent(bool keyboard_event){
+    int num ;
+    while(keyboard_event){
+        SDL_Event event;//event
+        const Uint8 *state = SDL_GetKeyboardState(NULL);
+        SDL_PumpEvents();
+        if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_LEFT]){
+            dir = LEFT;
+            success = true;
+            while(success){
+                const Uint8 *state_1 = SDL_GetKeyboardState(NULL);
+                SDL_PumpEvents();
+                if(state_1[SDL_SCANCODE_UP] || state_1[SDL_SCANCODE_LEFT]){
+                    continue;
+                }else{
+                    break;
+                }
+            }
+            break;
+        } else if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_RIGHT]){
+            dir = RIGHT;
+            success = true;
+            while(success){
+                const Uint8 *state_2 = SDL_GetKeyboardState(NULL);
+                SDL_PumpEvents();
+                if(state_2[SDL_SCANCODE_DOWN] || state_2[SDL_SCANCODE_RIGHT]){
+                    continue;
+                }else{
+                    break;
+                }
+            }
+            break;
+        }else if(state[SDL_SCANCODE_ESCAPE]){
+            success = false;
+            SDL_Quit();
+            exit(0);
+        }
+    }
+    success = false;
+}//Key event two
 
 int SDL_mouseevent(bool mouse_event,void *opaque, int *length, int *width,int **p_init,int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *file){
     SDL_Event ev;
@@ -224,14 +265,14 @@ int SDL_mouseevent(bool mouse_event,void *opaque, int *length, int *width,int **
         }
     }
     return 0;
-}
+}// Mouse click and motion event
 
 void SDL_quit(SDL_Window *window){
 //    printf("111111111\n");
     SDL_DestroyWindow(window);
 //    printf("222222222\n");
 //    SDL_Quit();
-}
+}//Destroy the window
 
 int main(int argc, char *argv[]) {
     int i, j, k, iteration;
@@ -281,10 +322,10 @@ int main(int argc, char *argv[]) {
                 while (fgets(empty,150,stdin));
             }
         }
-    }
+    }// Command line operation
 //    char *file = "game.txt";
 //    int iteration = 10;
-    user_choice(file,iteration);
+    user_choice(file,iteration);// Player wants to play which mode
 
     return 0;
 }
