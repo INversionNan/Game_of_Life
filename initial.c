@@ -26,12 +26,14 @@ int load_cell(FILE *file, int length, int width){
 }
 
 void initGrid(int *length, int *width, char *file){
+
     SDL_Window *window = NULL;
-    SDL_Surface *screenSurface = NULL;
+    SDL_Surface *screenSurface = NULL;//Define a window pointer and screen surface pointer
+
     FILE *filename;
     char read[200];
     int count;
-    int **p_grid = (int **)malloc(sizeof (int *));
+    int **p_grid = (int **)malloc(sizeof (int *));//Dynamically allocate space
 
     if ((filename = fopen(file,"r")) == NULL){
         filename = fopen(file,"w+");
@@ -39,10 +41,11 @@ void initGrid(int *length, int *width, char *file){
         filename = fopen(file,"r");
     }
 
+
     if(!fgets(read,150,filename)){
         printf("The file is empty!\n");
         printf("Please modify file contents to complete initialization.");
-        //return -1;
+        exit(0);
     }
 //    printf("%s",read);
     count = 0;
@@ -92,19 +95,18 @@ void initGrid(int *length, int *width, char *file){
         }
     }
     //printf("11111111111\n");
-    free(p_grid);
-    fclose(filename);
+    free(p_grid);//free the pointer of two-dimensional array
+    fclose(filename);//close the file
     //printf("11111111111\n");
-    //return 0;
-}
+}//init the map of cell from a file you choose
 
-//void initMap(int Map[Length][Width]){
-//    int i , j;
-//    for(i = 0; i < Length; i++){
-//        for (j = 0; j < Width; j++) {
-//            if(Map[i][j] == 0){
-//                printf("");
-//            } else printf("");
-//        }
-//    }
-//}
+void initMap(int Length, int Width,int **Map){
+    int i , j;
+    for(i = 0; i < Length; i++){
+        for (j = 0; j < Width; j++) {
+            if(Map[i][j] == 0){
+                printf("□");
+            } else printf("■");
+        }
+    }
+}

@@ -3,7 +3,7 @@
 
 #define printERROR(text) printf("%s ERROR: %s\n",text, SDL_GetError())
 
-int choice = 1;
+int choice_num = 1;
 int dir;
 bool success;
 
@@ -117,7 +117,7 @@ void SDL_event(bool keyboard_event){
         }
         success = false;
     }else{
-        int delay = 200;
+        int delay = 1500;
         SDL_Delay( delay ); // time between frames (ms)
     }
     //return;
