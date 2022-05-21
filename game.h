@@ -23,7 +23,8 @@
 
 void read(int length, int width, char *filename);
 void cell_copy(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *filename);
-void cell_init(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *filename,int **p_grid);
+void cell_init(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *filename,int **p_grid, int a, int b);
+bool gameover(int Length, int Width,int iteration,int num);
 
 //extern int dir;
 //extern bool success;

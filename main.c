@@ -15,15 +15,15 @@ SDL_Window *SDL_window(int length, int width){
     SDL_Window *window = NULL;
     SDL_Surface *screenSurface = NULL;
 //    printf("000000000\n");
-    int rc;
     //if (SDL_Init(SDL_INIT_EVERYTHING) == -1) { return -1; }
-//    printf("11111111111\n");
-    if((rc=SDL_Init( SDL_INIT_VIDEO )) !=0){
-//        printf("999999\n");
+    //printf("11111111111\n");
+    if((SDL_Init( SDL_INIT_VIDEO )) <0){
+        //printf("999999\n");
         //printf("Initialization failed SDL_Error: %s\n",SDL_GetError());
         printERROR("Initialization failed");
+        exit(0);
     }else{
-//        printf("111111111111\n");
+        //printf("2222222222n");
         window = SDL_CreateWindow("Game of Life", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Length*150, Width*150, SDL_WINDOW_SHOWN);
     }
 //    printf("2222222222222\n");
@@ -113,6 +113,7 @@ void SDL_event(bool keyboard_event){
                 break;
             }else if(state[SDL_SCANCODE_ESCAPE]){
                 success = false;
+                SDL_Quit();
                 exit(0);
             }
             //printf("11111111111\n");
@@ -163,6 +164,7 @@ int SDL_mouseevent(bool mouse_event,void *opaque, int *length, int *width,int **
                 }
                 else if(SDLK_ESCAPE == ev.key.keysym.sym){
                     mouse_event = false;
+                    SDL_Quit();
                     exit(0);
                     break;
                 }
@@ -180,7 +182,7 @@ int SDL_mouseevent(bool mouse_event,void *opaque, int *length, int *width,int **
                         p_init[*length][*width] = 0;
                         printf("Position(%d, %d) will be dead...............\n", *length, *width);
                     }
-                    cell_init(Length,Width,window,screenSurface,file,p_init);
+                    cell_init(Length,Width,window,screenSurface,file,p_init,*length,*width);
                 }
                 else if(SDL_BUTTON_RIGHT == ev.button.button)
                 {
@@ -195,7 +197,7 @@ int SDL_mouseevent(bool mouse_event,void *opaque, int *length, int *width,int **
                         p_init[*length][*width] = 0;
                         printf("Position(%d, %d) will be dead...............\n", *length, *width);
                     }
-                    cell_init(Length,Width,window,screenSurface,file,p_init);
+                    cell_init(Length,Width,window,screenSurface,file,p_init,*length,*width);
                 }
             }
             else if (SDL_MOUSEMOTION == ev.type)
@@ -253,7 +255,7 @@ int main(int argc, char *argv[]) {
     if(argc > 2){
         int length_2 = strlen(argv[2]);
         for(j = 0; j < length_2; ++j){
-            if(argv[2][i] < '0' || argv[2][i] > '9'){
+            if(argv[2][j] < '0' || argv[2][j] > '9'){
                 break;
             }
         }

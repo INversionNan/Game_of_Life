@@ -80,44 +80,51 @@ void cell_change(int Length, int Width){
     //Edges
     for(int i = 1; i < Length - 1; ++i){
         p_next[0][i] = cell_judge(p_begin[0][i],p_begin[0][i + 1] +p_begin[0][i - 1]+
-        p_begin[1][i + 1]+p_begin[1][i - 1] + p_begin[1][i]);
+                                                p_begin[1][i + 1]+p_begin[1][i - 1] + p_begin[1][i]);
         p_next[Width - 1][i] = cell_judge(p_begin[Width - 1][i],p_begin[Width - 2][i] +
-        p_begin[Width - 1][i-1] + p_begin[Width - 1][i + 1] + p_begin[Width - 2][i - 1] + p_begin[Width - 2][i + 1]);
+                                                                p_begin[Width - 1][i-1] + p_begin[Width - 1][i + 1] + p_begin[Width - 2][i - 1] + p_begin[Width - 2][i + 1]);
     }
     for(int j = 1; j < Width - 1; ++j){
         p_next[j][0] = cell_judge(p_begin[j][0],p_begin[j - 1][0] + p_begin[j + 1][0] +
-        p_begin[j][1] + p_begin[j + 1][1] + p_begin[j - 1][1]);
+                                                p_begin[j][1] + p_begin[j + 1][1] + p_begin[j - 1][1]);
         p_next[j][Length - 1] = cell_judge(p_begin[j][Length - 1],p_begin[j - 1][ Length - 1]+
-        p_begin[j + 1][Length - 1] + p_begin[j][Length - 2] + p_begin[j - 1][Length - 2]+ p_begin[j + 1][Length - 2]);
+                                                                  p_begin[j + 1][Length - 1] + p_begin[j][Length - 2] + p_begin[j - 1][Length - 2]+ p_begin[j + 1][Length - 2]);
     }
 
     //Corners
     p_next[0][0] = cell_judge(p_begin[0][0],
                               p_begin[0][1] + p_begin[1][1] + p_begin[1][0]);
     p_next[0][Length - 1] = cell_judge(p_begin[0][Length - 1],
-                                      p_begin[0][Length - 2] + p_begin[1][Length - 1]+p_begin[1][Length - 2]);
+                                       p_begin[0][Length - 2] + p_begin[1][Length - 1]+p_begin[1][Length - 2]);
     p_next[Width - 1][0] = cell_judge(p_begin[Width - 1][0],
-                                       p_begin[Width - 2][1] + p_begin[Width - 1][1]+p_begin[Width - 2][0]);
+                                      p_begin[Width - 2][1] + p_begin[Width - 1][1]+p_begin[Width - 2][0]);
     p_next[Width - 1][Length - 1] = cell_judge(p_begin[Width - 1][Length - 1],
                                                p_begin[Width - 2][Length - 1] +p_begin[Width - 1][Length - 2] + p_begin[Width - 2][Length - 2]);
 }//change the cell in the map
 
-void cell_init(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *filename,int **p_grid){
+void cell_init(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *filename,int **p_grid, int a, int b){
     FILE *file = fopen(filename,"w+");
     for(int i = 0; i < Width; ++i){
         for (int j = 0; j < Length; ++j) {
             fprintf(file,"%d",p_grid[i][j]);
             p_cell[i][j] = p_grid[i][j];
-            if(p_grid[i][j] == 1){
-                show_grid(window, screenSurface, 150 * j, 150 * i);
-                show_survive(window, screenSurface, Length, Width);
-            }else{
-                show_dead(window, screenSurface, 150 * j, 150 * i);
-                show_survive(window, screenSurface, Length, Width);
-            }
+//            if(p_grid[i][j] == 1){
+//                show_grid(window, screenSurface, 150 * j, 150 * i);
+//                show_survive(window, screenSurface, Length, Width);
+//            }else{
+//                show_dead(window, screenSurface, 150 * j, 150 * i);
+//                show_survive(window, screenSurface, Length, Width);
+//            }
         }
         fprintf(file,"\n");
         memset(p_next[i],0,sizeof (p_next[i]));
+    }
+    if(p_grid[a][b] == 1){
+        show_grid(window, screenSurface, 150 * b, 150 * a);
+        show_survive(window, screenSurface, Length, Width);
+    }else{
+        show_dead(window, screenSurface, 150 * b, 150 * a);
+        show_survive(window, screenSurface, Length, Width);
     }
     fclose(file);
 }
@@ -139,14 +146,24 @@ void cell_copy(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurf
     //printf("1111111\n");
 }
 
-void read(int length, int width, char *filename){
-    FILE *file = fopen(filename,"w+");
-    for(int i = 0; i < width; ++i){
-        for (int j = 0; j < length; ++j) {
-            p_cell[i][j] = p_begin[i][j];
-        }
-    }
-}
+//void read(int length, int width, char *filename){
+//    FILE *file = fopen(filename,"w+");
+//    p_begin = (int **)malloc(sizeof (int *)*width);
+//    p_next = (int **) malloc(sizeof (int *)*width);
+//    p_cell = (int **) malloc(sizeof (int *)*width);//Dynamically allocate the space of a two-dimensional array
+//    for(int i = 0; i < width; ++i){
+//        p_cell[i] = (int *) malloc(length * sizeof (int) );
+//        memset(p_cell[i],0,sizeof (p_cell[i]));
+//        p_begin[i] = (int *) malloc(length * sizeof (int) );
+//        memset(p_cell[i],0,sizeof (p_begin[i]));
+//    }
+//    for(int i = 0; i < width; ++i){
+//        for (int j = 0; j < length; ++j) {
+//            p_cell[i][j] = p_begin[i][j];
+//        }
+//    }
+//    fclose(file);
+//}
 
 void interface(){
     printf("Please enter your choice\n");
@@ -584,6 +601,17 @@ void game_click(char *file, int iteration){
     show_map(window,screenSurface);
     show_survive(window, screenSurface, Length, Width);
 
+    FILE *fp_2 = fopen(file,"r");
+    rewind(fp_2);
+    for(int i = 0; i < Width; ++i){
+        fflush(stdin);
+        fgets(line,150,fp_2);
+        for(int j = 0; j < Length && (line[j] != '\r' && line[j] !='\n'); ++j){
+            p_begin[i][j] = line[j] - '0';
+        }
+    }
+    fflush(stdin);
+
     while(1){
         count_play++;
 //        if(iteration < 0){
@@ -605,11 +633,10 @@ void game_click(char *file, int iteration){
                 p_cell[i][j] = line[j] - '0';
             }
         }
-        fflush(stdin);
-        fclose(fp_1);
 
-        SDL_mouseevent(success,NULL, &x,&y,p_begin,Length,Width,window,screenSurface,file);
-        if(game_over(Length,Width,iteration,count_play)){
+        SDL_mouseevent(success,NULL, &x,&y,p_cell,Length,Width,window,screenSurface,file);
+
+        if(gameover(Length,Width,iteration,count_play)){
 //            printf("1111\n");
             break;
         } else{
@@ -659,6 +686,33 @@ bool game_over(int Length, int Width,int iteration,int num){
         if(count_last == Length * Width){
             printf("\nAll cells in the map have maintained a constant state\n");
         }
+        if(count_num == Length * Width){
+            printf("\nAll cells in the map have died.\n");
+        }
+        if(num == iteration){
+            printf("\nThe number of iterations you defined is exhausted\n");
+        }
+        return true;
+    }
+    return false;
+}// Judge game is over or not from iteration, map is the same as last and all cell is dead
+
+bool gameover(int Length, int Width,int iteration,int num){
+    int count_num = 0;
+//    for(int i = 0; i < Width; ++i){
+//        for(int j = 0; j < Length; ++j){
+//            p_cell[i][j] = p_begin[i][j];
+//        }
+//    }
+    for(int i = 0; i < Width; ++i){
+        for(int j = 0; j < Length; ++j){
+            if(p_cell[i][j] == 0){
+                count_num++;
+            }
+        }
+    }
+    //iteration ++;
+    if(num == iteration || count_num == Length * Width){
         if(count_num == Length * Width){
             printf("\nAll cells in the map have died.\n");
         }
