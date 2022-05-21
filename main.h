@@ -39,11 +39,12 @@ bool game_over(int Length, int Width,int iteration,int num);
 void show_map(SDL_Window *window, SDL_Surface *screenSurface);
 void show_grid(SDL_Window *window, SDL_Surface *screen, int c, int d);
 void show_survive(SDL_Window *window, SDL_Surface *screen, int a, int b);
+void show_dead(SDL_Window *window, SDL_Surface *screenSurface, int a, int b);
 
 SDL_Window *SDL_window(int length, int width);
 SDL_Surface *SDL_surface(SDL_Window *window);
 void SDL_event(bool keyboard_event);
-int SDL_mouseevent(bool mouse_event,void *opaque);
+int SDL_mouseevent(bool mouse_event,void *opaque, int *length, int *width,int **p_init,int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *file);
 void SDL_quit(SDL_Window *window);
 
 int load_cell(FILE *file, int length, int width);

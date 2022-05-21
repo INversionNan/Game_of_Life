@@ -22,6 +22,12 @@ void show_grid(SDL_Window *window, SDL_Surface *screenSurface, int a, int b){
     SDL_UpdateWindowSurface(window);
 }//Show the background and survive cell
 
+void show_dead(SDL_Window *window, SDL_Surface *screenSurface, int a, int b){
+    SDL_Rect array = {a,b,150,150};
+    SDL_FillRect(screenSurface,&array, SDL_MapRGB(screenSurface->format, 255, 255, 255));
+    SDL_UpdateWindowSurface(window);
+}//Show the background and survive cell
+
 void show_survive(SDL_Window *window, SDL_Surface *screenSurface, int c, int d){
     for(int i = 0; i < c + 1; ++i){
         SDL_Rect grid_1 = {i * 150,0 ,1, d * 150};
@@ -95,6 +101,26 @@ void cell_change(int Length, int Width){
     p_next[Width - 1][Length - 1] = cell_judge(p_begin[Width - 1][Length - 1],
                                                p_begin[Width - 2][Length - 1] +p_begin[Width - 1][Length - 2] + p_begin[Width - 2][Length - 2]);
 }//change the cell in the map
+
+void cell_init(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *filename,int **p_grid){
+    FILE *file = fopen(filename,"w+");
+    for(int i = 0; i < Width; ++i){
+        for (int j = 0; j < Length; ++j) {
+            fprintf(file,"%d",p_grid[i][j]);
+            p_cell[i][j] = p_grid[i][j];
+            if(p_grid[i][j] == 1){
+                show_grid(window, screenSurface, 150 * j, 150 * i);
+                show_survive(window, screenSurface, Length, Width);
+            }else{
+                show_dead(window, screenSurface, 150 * j, 150 * i);
+                show_survive(window, screenSurface, Length, Width);
+            }
+        }
+        fprintf(file,"\n");
+        memset(p_next[i],0,sizeof (p_next[i]));
+    }
+    fclose(file);
+}
 
 void cell_copy(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *filename){
     FILE *file = fopen(filename,"w+");
@@ -493,7 +519,6 @@ void game_auto(char *file, int iteration){
 }// The game framework by key event
 
 void game_click(char *file, int iteration){
-
     SDL_Window *window = NULL;
     SDL_Surface *screenSurface = NULL;//Define a window and screen pointer
 
@@ -534,67 +559,30 @@ void game_click(char *file, int iteration){
     p_next = (int **) malloc(sizeof (int *)*Width);
     p_cell = (int **) malloc(sizeof (int *)*Width);//Dynamically allocate the space of a two-dimensional array
 
-
-
-    bool success = true;
-    SDL_mouseevent(success,NULL);
-
-    //printf("11111111111\n");
-    //Width = 6, Length = 5
-//    printf("%d\n",Width);
-//    printf("%d\n",Length);
-    window = SDL_window(Length, Width);// Get a window
-//    printf("11111111111\n");
-    screenSurface = SDL_surface(window);// Get a screen surface
-    //if(initGrid(&Length,&Width,file) == -1){
-    //printf("");
-    //}// init the game of life
-    //printf("11111111111\n");
-
     for(int i = 0; i < Width; ++i){
-        p_next[i] = (int *) malloc(Length * sizeof (int) );
-        memset(p_next[i],0,sizeof (p_next[i]));
+        p_begin[i] = (int *) malloc(Length * sizeof (int));
     }
-    for(int i = 0; i < Width; ++i){
-        p_cell[i] = (int *) malloc(Length * sizeof (int) );
-        memset(p_cell[i],0,sizeof (p_cell[i]));
+    for(int j = 0; j < Width; ++j){
+        p_next[j] = (int *) malloc(Length * sizeof (int));
+        memset(p_next[j],0,sizeof (p_next[j]));
+    }
+    for(int k = 0; k < Width; ++k){
+        p_cell[k] = (int *) malloc(Length * sizeof (int));
+        memset(p_cell[k],0,sizeof (p_cell[k]));
     }//Dynamically allocate the space of a two-dimensional array
 
-    FILE *filename = fopen(file,"r");
-    rewind(filename);
-    //printf("%d\n",Width);
-    for(int i = 0; i < Width; ++i){
-        fflush(stdin);
-//        printf("%s\n",read);
-        fgets(line,150, filename);
-        p_begin[i] = (int *) malloc(sizeof (int)*(Length));
-        //printf("%s",line);
-        for(int j = 0 ; j < Length && (line[j] != '\r' && line[j] !='\n'); ++j){
-            //printf("%c\n",line[i]);
-            if(line[j] == '0' || line[j] == '1'){
-                p_begin[i][j] = line[j] - '0';
-                //printf("%d\n",p_begin[i][j]);
-            }else{
-                printf("Your input is wrong. Please input 1 on behalf of survive, 0 on behalf of death.\n");
-                break;
-            }
-            //printf("%d\n",p_begin[i][j]);
-            if(p_begin[i][j] == 1){
-                //printf("111111\n");`
-                show_grid(window, screenSurface, 150 * j, 150 * i);
-            } else{
-                continue;
-            }
-        }
-    }
-    fclose(filename);
-    //printf("11111111111\n");
+    window = SDL_window(Length, Width);// Get a window
+    screenSurface = SDL_surface(window);// Get a screen surface
+    show_map(window,screenSurface);
     show_survive(window, screenSurface, Length, Width);
-    //printf("11111111111\n");
-
-
+    int x = 0;
+    int y = 0;
     int count_play = 0;
-    SDL_event(success);
+
+    bool success = true;
+    SDL_mouseevent(success,NULL, &x,&y,p_begin,Length,Width,window,screenSurface,file);
+    show_map(window,screenSurface);
+    show_survive(window, screenSurface, Length, Width);
 
     while(1){
         count_play++;
@@ -620,7 +608,7 @@ void game_click(char *file, int iteration){
         fflush(stdin);
         fclose(fp_1);
 
-        SDL_event(success);
+        SDL_mouseevent(success,NULL, &x,&y,p_begin,Length,Width,window,screenSurface,file);
         if(game_over(Length,Width,iteration,count_play)){
 //            printf("1111\n");
             break;
@@ -635,14 +623,13 @@ void game_click(char *file, int iteration){
                 }
             }
             fclose(fp);
-            //printf("11111111111\n");
         }
     }
     freeAll();
     //SDL_UpdateWindowSurface(window);
     //save(Length, Width, window, screenSurface,file);//save the result in the file
     SDL_quit(window);
-    printf("\nGame is over! Thank you for having a good time!\n\n");
+    printf("\nGame is over! Thank you for having a good time!\n\n");// Game is over information
 }// The game framework
 
 bool game_over(int Length, int Width,int iteration,int num){

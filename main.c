@@ -16,6 +16,8 @@ SDL_Window *SDL_window(int length, int width){
     SDL_Surface *screenSurface = NULL;
 //    printf("000000000\n");
     int rc;
+    //if (SDL_Init(SDL_INIT_EVERYTHING) == -1) { return -1; }
+//    printf("11111111111\n");
     if((rc=SDL_Init( SDL_INIT_VIDEO )) !=0){
 //        printf("999999\n");
         //printf("Initialization failed SDL_Error: %s\n",SDL_GetError());
@@ -123,49 +125,100 @@ void SDL_event(bool keyboard_event){
     //return;
 }
 
-int SDL_mouseevent(bool mouse_event,void *opaque){
+int SDL_mouseevent(bool mouse_event,void *opaque, int *length, int *width,int **p_init,int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *file){
     SDL_Event ev;
     int quit = 0;
     //while (!quit)
-    while (SDL_PollEvent(&ev))
+    while(mouse_event){
+        while (SDL_PollEvent(&ev))
         {
             if (SDL_KEYDOWN == ev.type) // SDL_KEYUP
             {
                 if (SDLK_DOWN == ev.key.keysym.sym)
                 {
-                    printf("SDLK_DOWN ...............\n");
+                    cell_change(Length,Width);
+                    printf("Cell evolution generation ...............\n");
+                    mouse_event = false;
+                    break;
                 }else if (SDLK_UP == ev.key.keysym.sym){
-                    printf("SDLK_UP ...............\n");
+                    cell_change(Length,Width);
+                    printf("Cell evolution generation ...............\n");
+                    mouse_event = false;
+                    break;
                 }else if (SDLK_LEFT == ev.key.keysym.sym){
-                    printf("SDLK_LEFT ...............\n");
+                    cell_change(Length,Width);
+                    printf("Cell evolution generation ...............\n");
+                    mouse_event = false;
+                    break;
                 }else if (SDLK_RIGHT == ev.key.keysym.sym){
-                    printf("SDLK_RIGHT ...............\n");
+                    cell_change(Length,Width);
+                    printf("Cell evolution generation ...............\n");
+                    mouse_event = false;
+                    break;
+                }else if(SDLK_SPACE == ev.key.keysym.sym){
+                    cell_change(Length,Width);
+                    printf("Cell evolution generation ...............");
+                    mouse_event = false;
+                    break;
+                }
+                else if(SDLK_ESCAPE == ev.key.keysym.sym){
+                    mouse_event = false;
+                    exit(0);
+                    break;
                 }
             }else if (SDL_MOUSEBUTTONDOWN == ev.type){
-            if(SDL_BUTTON_LEFT == ev.button.button)
-            {
-                int px = ev.button.x;
-                int py = ev.button.y;
-                printf("x, y %d %d ...............\n", px, py);
+                if(SDL_BUTTON_LEFT == ev.button.button)
+                {
+                    int px = ev.button.x;
+                    int py = ev.button.y;
+                    *width = px/150;
+                    *length = py/150;
+                    if(p_init[*length][*width] == 0){
+                        p_init[*length][*width] = 1;
+                        printf("Position(%d, %d) will be survive...............\n", *length, *width);
+                    } else{
+                        p_init[*length][*width] = 0;
+                        printf("Position(%d, %d) will be dead...............\n", *length, *width);
+                    }
+                    cell_init(Length,Width,window,screenSurface,file,p_init);
+                }
+                else if(SDL_BUTTON_RIGHT == ev.button.button)
+                {
+                    int px = ev.button.x;
+                    int py = ev.button.y;
+                    *width = px/150;
+                    *length = py/150;
+                    if(p_init[*length][*width] == 0){
+                        p_init[*length][*width] = 1;
+                        printf("Position(%d, %d) will be survive...............\n", *length, *width);
+                    } else{
+                        p_init[*length][*width] = 0;
+                        printf("Position(%d, %d) will be dead...............\n", *length, *width);
+                    }
+                    cell_init(Length,Width,window,screenSurface,file,p_init);
+                }
             }
-            else if(SDL_BUTTON_RIGHT == ev.button.button)
+            else if (SDL_MOUSEMOTION == ev.type)
             {
-                int px = ev.button.x;
-                int py = ev.button.y;
-                printf("x, y %d %d ...............\n", px, py);
+                int px = ev.motion.x;
+                int py = ev.motion.y;
+                *width = px/150;
+                *length = py/150;
+                printf("Position(%d, %d) ...............\n", *length, *width);
             }
-        }
-        else if (SDL_MOUSEMOTION == ev.type)
-        {
-            int px = ev.motion.x;
-            int py = ev.motion.y;
-
-            printf("x, y %d %d ...............\n", px, py);
-        }
-        else if (SDL_QUIT == ev.type)
-        {
-            printf("SDL_QUIT ...............\n");
-            return 0;
+//            else if(SDL_MOUSEWHEEL == ev.type){
+//                if(ev.wheel.y > 0){
+//
+//                }
+//                if(ev.wheel.y < 0){
+//
+//                }
+//            }
+            else if (SDL_QUIT == ev.type)
+            {
+                printf("SDL_QUIT ...............\n");
+                return 0;
+            }
         }
     }
     return 0;
