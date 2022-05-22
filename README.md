@@ -1,7 +1,7 @@
 # Game_of_Life
 My Git Repository URL: https://github.com/INversionNan/Game_of_Life
 Screenshot of my git commit history:
-
+![image](https://user-images.githubusercontent.com/102014220/169686485-d0a6e570-17ca-4219-9a43-7e55ed7127a4.png)
 I choose the project two "Game of Life":
 Introduction on how to run my program:
 1. Primarily, the player needs to have the option of passing either 1 argument (filename) or 2 arguments (filename and number of iterations) to the command line.
