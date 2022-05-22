@@ -16,49 +16,113 @@ void show_map(SDL_Window *window, SDL_Surface *screenSurface){
     SDL_UpdateWindowSurface(window);
 }//Show the map
 
-void show_grid(SDL_Window *window, SDL_Surface *screenSurface, int a, int b){
-    SDL_Rect array = {a,b,150,150};
+void show_grid(SDL_Window *window, SDL_Surface *screenSurface, int a, int b,int Length, int Width){
+    int m,n;
+    int value = 150;
+    if(Length > 8 || Width > 5){
+        if(Width > 5){
+            for(m = value; m > 0 ;m--){
+                if(m * Width > 700 && m * Width < 800){
+                    break;
+                }
+            }
+        }else{
+            m = value;
+        }
+        if(Length > 8){
+            for (n = value; n > 0; --n) {
+                if(n * Length > 1200 && n * Length < 1300){
+                    break;
+                }
+            }
+        }else{
+            n = value;
+        }
+        if(m < n){
+            value = m;
+        }else{
+            value = n;
+        }
+    }
+    SDL_Rect array = {a,b,value,value};
     SDL_FillRect(screenSurface,&array, SDL_MapRGB(screenSurface->format, 218, 112, 214));
     SDL_UpdateWindowSurface(window);
 }//Show the background and survive cell
 
-void show_dead(SDL_Window *window, SDL_Surface *screenSurface, int a, int b){
-    SDL_Rect array = {a,b,150,150};
+void show_dead(SDL_Window *window, SDL_Surface *screenSurface, int a, int b,int Length, int Width){
+    int m,n;
+    int value = 150;
+    if(Length > 8 || Width > 5){
+        if(Width > 5){
+            for(m = value; m > 0 ;m--){
+                if(m * Width > 700 && m * Width < 800){
+                    break;
+                }
+            }
+        }else{
+            m = value;
+        }
+        if(Length > 8){
+            for (n = value; n > 0; --n) {
+                if(n * Length > 1200 && n * Length < 1300){
+                    break;
+                }
+            }
+        }else{
+            n = value;
+        }
+        if(m < n){
+            value = m;
+        }else{
+            value = n;
+        }
+    }
+    SDL_Rect array = {a,b,value,value};
     SDL_FillRect(screenSurface,&array, SDL_MapRGB(screenSurface->format, 255, 255, 255));
     SDL_UpdateWindowSurface(window);
 }//Show the background and survive cell
 
-void show_survive(SDL_Window *window, SDL_Surface *screenSurface, int c, int d){
+void show_survive(SDL_Window *window, SDL_Surface *screenSurface, int c, int d,int Length, int Width){
+    int m,n;
+    int value = 150;
+    if(Length > 8 || Width > 5){
+        if(Width > 5){
+            for(m = value; m > 0 ;m--){
+                if(m * Width > 700 && m * Width < 800){
+                    break;
+                }
+            }
+        }else{
+            m = value;
+        }
+        if(Length > 8){
+            for (n = value; n > 0; --n) {
+                if(n * Length > 1200 && n * Length < 1300){
+                    break;
+                }
+            }
+        }else{
+            n = value;
+        }
+        if(m < n){
+            value = m;
+        }else{
+            value = n;
+        }
+    }
     for(int i = 0; i < c + 1; ++i){
-        SDL_Rect grid_1 = {i * 150,0 ,1, d * 150};
+        SDL_Rect grid_1 = {i * value,0 ,1, d * value};
         SDL_FillRect(screenSurface,&grid_1, SDL_MapRGB(screenSurface->format, 138 , 43 , 226));
         SDL_UpdateWindowSurface(window);
     }
     for(int j = 0; j < d + 1; ++j){
-        SDL_Rect grid_2 = {0, j * 150 , c * 150 , 1};
+        SDL_Rect grid_2 = {0, j * value , c * value , 1};
         SDL_FillRect(screenSurface,&grid_2, SDL_MapRGB(screenSurface->format, 138 , 43 , 226));
         SDL_UpdateWindowSurface(window);
     }
 }//Show the line and grid pattern
 
-int cell_judge(int cell_survive,int neighbour_survive){
-    //If the beginning cell is survival
-    if(cell_survive == 1){
-        if(neighbour_survive > 3 || neighbour_survive <= 1){
-            return 0;
-        } else{
-            return 1;
-        }
-    }
-    //If the beginning cell is dead
-    if(cell_survive == 0){
-        if(neighbour_survive == 3){
-            return 1;
-        } else{
-            return 0;
-        }
-    }
-}//judge whether this cell survives or not; 0 is death, 1 is survival.
+
 
 void cell_change(int Length, int Width){
 //    int NeighborNumber;
@@ -103,6 +167,33 @@ void cell_change(int Length, int Width){
 }//change the cell in the map
 
 void cell_init(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *filename,int **p_grid, int a, int b){
+    int m,n;
+    int value = 150;
+    if(Length > 8 || Width > 5){
+        if(Width > 5){
+            for(m = value; m > 0 ;m--){
+                if(m * Width > 700 && m * Width < 800){
+                    break;
+                }
+            }
+        }else{
+            m = value;
+        }
+        if(Length > 8){
+            for (n = value; n > 0; --n) {
+                if(n * Length > 1200 && n * Length < 1300){
+                    break;
+                }
+            }
+        }else{
+            n = value;
+        }
+        if(m < n){
+            value = m;
+        }else{
+            value = n;
+        }
+    }
     FILE *file = fopen(filename,"w+");
     for(int i = 0; i < Width; ++i){
         for (int j = 0; j < Length; ++j) {
@@ -120,23 +211,50 @@ void cell_init(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurf
         memset(p_next[i],0,sizeof (p_next[i]));
     }
     if(p_grid[a][b] == 1){
-        show_grid(window, screenSurface, 150 * b, 150 * a);
-        show_survive(window, screenSurface, Length, Width);
+        show_grid(window, screenSurface, value * b, value * a,Length,Width);
+        show_survive(window, screenSurface, Length, Width,Length,Width);
     }else{
-        show_dead(window, screenSurface, 150 * b, 150 * a);
-        show_survive(window, screenSurface, Length, Width);
+        show_dead(window, screenSurface, value * b, value * a,Length,Width);
+        show_survive(window, screenSurface, Length, Width,Length,Width);
     }
     fclose(file);
 }// init the cell map
 
 void cell_copy(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *filename){
+    int m,n;
+    int value = 150;
+    if(Length > 8 || Width > 5){
+        if(Width > 5){
+            for(m = value; m > 0 ;m--){
+                if(m * Width > 700 && m * Width < 800){
+                    break;
+                }
+            }
+        }else{
+            m = value;
+        }
+        if(Length > 8){
+            for (n = value; n > 0; --n) {
+                if(n * Length > 1200 && n * Length < 1300){
+                    break;
+                }
+            }
+        }else{
+            n = value;
+        }
+        if(m < n){
+            value = m;
+        }else{
+            value = n;
+        }
+    }
     FILE *file = fopen(filename,"w+");
     for(int i = 0; i < Width; ++i){
         for (int j = 0; j < Length; ++j) {
             fprintf(file,"%d",p_next[i][j]);
             p_cell[i][j] = p_begin[i][j];
             if(p_next[i][j] == 1){
-                show_grid(window, screenSurface, 150 * j, 150 * i);
+                show_grid(window, screenSurface, value * j, value * i,Length,Width);
             }
         }
         fprintf(file,"\n");
@@ -304,7 +422,33 @@ void game_file(char *file, int iteration){
     //printf("");
     //}// init the game of life
     //printf("11111111111\n");
-
+    int m,n;
+    int value = 150;
+    if(Length > 8 || Width > 5){
+        if(Width > 5){
+            for(m = value; m > 0 ;m--){
+                if(m * Width > 700 && m * Width < 800){
+                    break;
+                }
+            }
+        }else{
+            m = value;
+        }
+        if(Length > 8){
+            for (n = value; n > 0; --n) {
+                if(n * Length > 1200 && n * Length < 1300){
+                    break;
+                }
+            }
+        }else{
+            n = value;
+        }
+        if(m < n){
+            value = m;
+        }else{
+            value = n;
+        }
+    }
     for(int i = 0; i < Width; ++i){
         p_next[i] = (int *) malloc(Length * sizeof (int) );
         memset(p_next[i],0,sizeof (p_next[i]));
@@ -336,7 +480,7 @@ void game_file(char *file, int iteration){
             //printf("%d\n",p_begin[i][j]);
             if(p_begin[i][j] == 1){
                 //printf("111111\n");`
-                show_grid(window, screenSurface, 150 * j, 150 * i);
+                show_grid(window, screenSurface, value * j, value * i,Length,Width);
             } else{
                 continue;
             }
@@ -344,7 +488,7 @@ void game_file(char *file, int iteration){
     }
     fclose(filename);
     //printf("11111111111\n");
-    show_survive(window, screenSurface, Length, Width);// Draw the game of life map
+    show_survive(window, screenSurface, Length, Width,Length,Width);// Draw the game of life map
     //printf("11111111111\n");
 
     bool success = true;// True or false to implement the SQL event
@@ -362,7 +506,7 @@ void game_file(char *file, int iteration){
         //save(Length, Width, file, window, screenSurface,p_next);
         //save_game(Length,Width,file);
         cell_copy(Length,Width,window,screenSurface,file);
-        show_survive(window, screenSurface, Length, Width);
+        show_survive(window, screenSurface, Length, Width,Length,Width);
 
         FILE *fp_1 = fopen(file,"r");
         rewind(fp_1);
@@ -429,7 +573,33 @@ void game_auto(char *file, int iteration){
     //printf("");
     //}// init the game of life
     //printf("11111111111\n");
-
+    int m,n;
+    int value = 150;
+    if(Length > 8 || Width > 5){
+        if(Width > 5){
+            for(m = value; m > 0 ;m--){
+                if(m * Width > 700 && m * Width < 800){
+                    break;
+                }
+            }
+        }else{
+            m = value;
+        }
+        if(Length > 8){
+            for (n = value; n > 0; --n) {
+                if(n * Length > 1200 && n * Length < 1300){
+                    break;
+                }
+            }
+        }else{
+            n = value;
+        }
+        if(m < n){
+            value = m;
+        }else{
+            value = n;
+        }
+    }
     for(int i = 0; i < Width; ++i){
         p_next[i] = (int *) malloc(Length * sizeof (int) );
         memset(p_next[i],0,sizeof (p_next[i]));
@@ -461,7 +631,7 @@ void game_auto(char *file, int iteration){
             //printf("%d\n",p_begin[i][j]);
             if(p_begin[i][j] == 1){
                 //printf("111111\n");`
-                show_grid(window, screenSurface, 150 * j, 150 * i);
+                show_grid(window, screenSurface, value * j, value * i,Length,Width);
             } else{
                 continue;
             }
@@ -469,7 +639,7 @@ void game_auto(char *file, int iteration){
     }
     fclose(filename);
     //printf("11111111111\n");
-    show_survive(window, screenSurface, Length, Width);// Draw the game of life map
+    show_survive(window, screenSurface, Length, Width,Length,Width);// Draw the game of life map
     //printf("11111111111\n");
 
     bool success = false;// True or false to implement the SQL event
@@ -487,7 +657,7 @@ void game_auto(char *file, int iteration){
         //save(Length, Width, file, window, screenSurface,p_next);
         //save_game(Length,Width,file);
         cell_copy(Length,Width,window,screenSurface,file);
-        show_survive(window, screenSurface, Length, Width);
+        show_survive(window, screenSurface, Length, Width,Length,Width);
 
         FILE *fp_1 = fopen(file,"r");
         rewind(fp_1);
@@ -589,7 +759,7 @@ void game_click(char *file, int iteration){
     window = SDL_window(Length, Width);// Get a window
     screenSurface = SDL_surface(window);// Get a screen surface
     show_map(window,screenSurface);
-    show_survive(window, screenSurface, Length, Width);
+    show_survive(window, screenSurface, Length, Width,Length,Width);
     int x = 0;
     int y = 0;
     int count_play = 0;
@@ -597,7 +767,7 @@ void game_click(char *file, int iteration){
     bool success = true;
     SDL_mouseevent(success,NULL, &x,&y,p_begin,Length,Width,window,screenSurface,file);
     show_map(window,screenSurface);
-    show_survive(window, screenSurface, Length, Width);
+    show_survive(window, screenSurface, Length, Width,Length,Width);
 
     FILE *fp_2 = fopen(file,"r");
     rewind(fp_2);
@@ -620,7 +790,7 @@ void game_click(char *file, int iteration){
         //save(Length, Width, file, window, screenSurface,p_next);
         //save_game(Length,Width,file);
         cell_copy(Length,Width,window,screenSurface,file);
-        show_survive(window, screenSurface, Length, Width);
+        show_survive(window, screenSurface, Length, Width,Length,Width);
 
         FILE *fp_1 = fopen(file,"r");
         rewind(fp_1);

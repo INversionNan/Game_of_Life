@@ -42,9 +42,9 @@ bool game_over(int Length, int Width,int iteration,int num);
 
 //Show map and cell part:
 void show_map(SDL_Window *window, SDL_Surface *screenSurface);
-void show_grid(SDL_Window *window, SDL_Surface *screen, int c, int d);
-void show_survive(SDL_Window *window, SDL_Surface *screen, int a, int b);
-void show_dead(SDL_Window *window, SDL_Surface *screenSurface, int a, int b);
+void show_grid(SDL_Window *window, SDL_Surface *screen, int c, int d,int Length, int Width);
+void show_survive(SDL_Window *window, SDL_Surface *screen, int a, int b,int Length, int Width);
+void show_dead(SDL_Window *window, SDL_Surface *screenSurface, int a, int b,int Length, int Width);
 
 //SDL parts:
 SDL_Window *SDL_window(int length, int width);
