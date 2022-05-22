@@ -121,6 +121,36 @@ void SDL_event(bool keyboard_event){
         success = false;
     }else{
         int delay = 1500;
+//        bool keyevent = true;
+//        SDL_Event event;
+//        while(keyevent) {
+//            while (SDL_PollEvent(&event)) {
+//                if (SDL_KEYDOWN == event.type) // SDL_KEYUP
+//                {
+//                    if (SDLK_DOWN == event.key.keysym.sym) {
+//                        if(delay > 0){
+//                            delay -= 100;
+//                        }
+//                        keyevent = false;
+//                        break;
+//                    } else if (SDLK_UP == event.key.keysym.sym) {
+//                        delay += 100;
+//                        keyevent = false;
+//                        break;
+//                    }else if (SDLK_SPACE == event.key.keysym.sym) {
+//                        pause();
+//                        keyevent = false;
+//                        break;
+//                    } else if (SDLK_ESCAPE == event.key.keysym.sym) {
+//                        keyevent = false;
+//                        SDL_Quit();
+//                        exit(0);
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//        printf("%d",delay);
         SDL_Delay( delay ); // time between frames (ms)
     }
     //return;
@@ -162,6 +192,8 @@ void SDL_keyevent(bool keyboard_event){
             success = false;
             SDL_Quit();
             exit(0);
+        }else if(state[SDL_SCANCODE_SPACE]){
+            system("pause");
         }
     }
     success = false;
@@ -282,7 +314,7 @@ int main(int argc, char *argv[]) {
         int length_1 = strlen(argv[1]);
         if(length_1 < 4 || (argv[1][length_1 - 1]) != 't' || (argv[1][length_1 - 3]) != 't'|| (argv[1][length_1 - 2]) != 'x'|| (argv[1][length_1 - 4]) != '.'){
             do{
-                printf("Wrong fiename! Please enter a file name ending in txt:");
+                printf("Wrong firename! Please enter a file name ending in txt:");
                 fgets(file, 200, stdin);
                 for(i = strlen(file); file[i-1] == '\n' ||file[i-1] == '\r' ; i--){
                     file[i-1] = '\0';

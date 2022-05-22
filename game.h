@@ -21,10 +21,11 @@
 //const int CLIP_MOUSEDOWN=2;
 //const int CLIP_MOUSEUP=3;
 
-void read(int length, int width, char *filename);
+//Cell init and read file:
+void read_1(int length, int width, char *filename);
 void cell_copy(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *filename);
 void cell_init(int Length, int Width,SDL_Window *window, SDL_Surface *screenSurface,char *filename,int **p_grid, int a, int b);
-bool gameover(int Length, int Width,int iteration,int num);
+bool gameover(int Length, int Width,int iteration,int num);// Judge that game is over
 
 //extern int dir;
 //extern bool success;

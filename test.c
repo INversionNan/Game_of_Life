@@ -22,7 +22,7 @@ void test_fun1(void){
 
 }
 void test_fun2(void){
-    
+
 }
 CU_TestInfo test_cases1[] = {
         {"test1", test_fun1},
@@ -50,20 +50,8 @@ int main(int argc, char **argv)
         if (CUE_SUCCESS != CU_register_suites(suites)) {
             exit(EXIT_FAILURE);
         }
-#if 0
-        /**** Automated Mode *****************/
-		CU_set_output_filename("TestMax");
-		CU_automated_run_tests();
-		CU_list_tests_to_file();
-#else
-        //***** Basice Mode *******************
         CU_basic_set_mode(CU_BRM_VERBOSE);
         CU_basic_run_tests();
-#endif
-        CU_cleanup_registry();
-        return CU_get_error();
     }
     return 0;
 }
-
-
